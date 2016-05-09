@@ -1,33 +1,42 @@
-$( document ).ready( function(){
-    var minstart = $('#datetimepicker-start').data('date-minstart');
-    var minend = $('#datetimepicker-end').data('date-minend');
-    var maxrange = $('#datetimepicker-end').data('date-maxrange');
-    $('#datetimepicker-start').datetimepicker();
-    $('#datetimepicker-start').data('DateTimePicker').minDate(moment.utc().add(minstart, 'm'));
-    $('#datetimepicker-end').datetimepicker();
-    $('#datetimepicker-end').data('DateTimePicker').minDate(moment.utc().add(minend, 'm'));
-    $("#datetimepicker-start").on('dp.change',function (e) {
-        // Setting default, minimum and maximum for end
-        $('#datetimepicker-end').data('DateTimePicker').defaultDate(moment.utc(e.date).add(60, 'm'));
-        $('#datetimepicker-end').data('DateTimePicker').minDate(e.date);
-        $('#datetimepicker-end').data('DateTimePicker').maxDate(moment.utc(e.date).add(maxrange, 'm'));
-    });
-
-    function select_proper_transmitters(norad) {
+$(document).ready( function(){
+    function select_proper_transmitters(satellite) {
         $('#transmitter-selection').prop('disabled', false);
         $('#transmitter-selection option').hide();
-        $('#transmitter-selection option[data-satellite="' + norad + '"]').show().prop('selected', true);
+        $('#transmitter-selection option[data-satellite="' + satellite + '"]').show().prop('selected', true);
 
         $('.tle').hide();
-        $('.tle[data-norad="' + norad + '"]').show();
+        $('.tle[data-norad="' + satellite + '"]').show();
     }
 
-    var norad = $(this).find(':selected').data('norad');
-    select_proper_transmitters(norad);
+    var satellite;
+
+    var obs_filter = $('#form-obs').data('obs-filter');
+
+    if (obs_filter) {
+        satellite = $('input[name="satellite"]').val();
+    } else {
+        var minstart = $('#datetimepicker-start').data('date-minstart');
+        var minend = $('#datetimepicker-end').data('date-minend');
+        var maxrange = $('#datetimepicker-end').data('date-maxrange');
+        $('#datetimepicker-start').datetimepicker();
+        $('#datetimepicker-start').data('DateTimePicker').minDate(moment.utc().add(minstart, 'm'));
+        $('#datetimepicker-end').datetimepicker();
+        $('#datetimepicker-end').data('DateTimePicker').minDate(moment.utc().add(minend, 'm'));
+        $("#datetimepicker-start").on('dp.change',function (e) {
+            // Setting default, minimum and maximum for end
+            $('#datetimepicker-end').data('DateTimePicker').defaultDate(moment.utc(e.date).add(60, 'm'));
+            $('#datetimepicker-end').data('DateTimePicker').minDate(e.date);
+            $('#datetimepicker-end').data('DateTimePicker').maxDate(moment.utc(e.date).add(maxrange, 'm'));
+        });
+
+        satellite = $('#satellite-selection').val();
+    }
+
+    select_proper_transmitters(satellite);
 
     $('#satellite-selection').bind('keyup change', function() {
-        var norad = $(this).find(':selected').data('norad');
-        select_proper_transmitters(norad);
+        satellite = $(this).find(':selected').data('norad');
+        select_proper_transmitters(satellite);
     });
 
     $('#calculate-observation').click( function(){
@@ -35,7 +44,6 @@ $( document ).ready( function(){
         $('#timeline').empty();
         $('#hoverRes').hide();
         $('#windows-data').empty();
-        var satellite = $('#satellite-selection').val();
         var start_time = $('#datetimepicker-start input').val();
         var end_time = $('#datetimepicker-end input').val();
 

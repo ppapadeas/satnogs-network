@@ -28,3 +28,11 @@ def percentagerest(value):
         return 100 - value
     except (TypeError, ValueError):
         return 0
+
+
+@register.filter
+def truncatesecs(value):
+    try:
+        return value[:-3]
+    except (TypeError, ValueError):
+        return value
