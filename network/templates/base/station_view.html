@@ -169,6 +169,7 @@
         <th>Rise Time</th>
         <th>Max Altitude</th>
         <th>Rising Azimuth</th>
+        <th>Data</th>
         <th></th>
       </thead>
       <tbody>
@@ -187,6 +188,9 @@
             </td>
             <td>
               {{ nextpass.azr }}°
+            </td>
+            <td>
+              <canvas width="100" height="100" data-points="{{ nextpass.polar_data }}"></canvas>
             </td>
             <td>
               {% if nextpass.valid %}

@@ -518,6 +518,27 @@ def data_mark_bad(request, id):
     return redirect(reverse('base:observation_view', kwargs={'id': data.observation}))
 
 
+def calculate_polar_data(observer, satellite, start, end, points):
+    observer = observer.copy()
+    satellite = satellite.copy()
+    duration = (start - end).total_seconds()
+    delta = duration / points
+    temp_date = start
+    data = []
+    while temp_date < end:
+        observer.date = temp_date
+        satellite.compute(observer)
+        data.append([float(format(math.degrees(satellite.alt), '.4f')),
+                     float(format(math.degrees(satellite.az), '.4f'))])
+        temp_date = temp_date - timedelta(seconds=delta)
+    temp_date = end
+    observer.date = temp_date
+    satellite.compute(observer)
+    data.append([float(format(math.degrees(satellite.alt), '.4f')),
+                 float(format(math.degrees(satellite.az), '.4f'))])
+    return data
+
+
 def stations_list(request):
     """View to render Stations page."""
     stations = Station.objects.all()
@@ -582,6 +603,10 @@ def station_view(request, id):
                             if tr < ephem.Date(datetime.now() +
                                                timedelta(minutes=int(settings.DATE_MIN_START))):
                                 valid = False
+                            polar_data = calculate_polar_data(observer,
+                                                              sat_ephem,
+                                                              tr.datetime(),
+                                                              ts.datetime(), 10)
                             sat_pass = {'passid': passid,
                                         'mytime': str(observer.date),
                                         'debug': observer.next_pass(sat_ephem),
@@ -594,7 +619,8 @@ def station_view(request, id):
                                         'altt': elevation,  # Max altitude
                                         'ts': str(ts),      # Set time
                                         'azs': azs,         # Set azimuth
-                                        'valid': valid}
+                                        'valid': valid,
+                                        'polar_data': polar_data}
                             nextpasses.append(sat_pass)
                         observer.date = ephem.Date(ts).datetime() + timedelta(minutes=1)
                         continue
