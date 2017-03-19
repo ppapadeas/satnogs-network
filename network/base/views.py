@@ -26,6 +26,7 @@ from network.base.models import (Station, Transmitter, Observation,
                                  Data, Satellite, Antenna, Tle, Rig)
 from network.base.forms import StationForm, SatelliteFilterForm
 from network.base.decorators import admin_required
+from network.base.helpers import calculate_polar_data
 
 
 class StationSerializer(serializers.ModelSerializer):
@@ -516,27 +517,6 @@ def data_mark_bad(request, id):
     data.vetted_datetime = datetime.today()
     data.save(update_fields=['vetted_status', 'vetted_user', 'vetted_datetime'])
     return redirect(reverse('base:observation_view', kwargs={'id': data.observation}))
-
-
-def calculate_polar_data(observer, satellite, start, end, points):
-    observer = observer.copy()
-    satellite = satellite.copy()
-    duration = (start - end).total_seconds()
-    delta = duration / points
-    temp_date = start
-    data = []
-    while temp_date < end:
-        observer.date = temp_date
-        satellite.compute(observer)
-        data.append([float(format(math.degrees(satellite.alt), '.4f')),
-                     float(format(math.degrees(satellite.az), '.4f'))])
-        temp_date = temp_date - timedelta(seconds=delta)
-    temp_date = end
-    observer.date = temp_date
-    satellite.compute(observer)
-    data.append([float(format(math.degrees(satellite.alt), '.4f')),
-                 float(format(math.degrees(satellite.az), '.4f'))])
-    return data
 
 
 def stations_list(request):
