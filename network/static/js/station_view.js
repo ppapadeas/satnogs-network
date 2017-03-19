@@ -29,7 +29,7 @@ $(document).ready(function() {
         var centerY = ctx.canvas.height / 2;
         var canvasSize = Math.min(ctx.canvas.width, ctx.canvas.height);
         var altUnit = canvasSize/(2.5 * 90);
-        var fontRatio = 0.06;
+        var fontRatio = 0.07;
         var radius;
         var radians;
 
@@ -46,8 +46,8 @@ $(document).ready(function() {
             }
         }
 
-        ctx.strokeStyle = '#000000';
-        ctx.lineWidth = 2;
+        ctx.strokeStyle = '#444444';
+        ctx.lineWidth = 1;
         ctx.stroke();
         //Draw axis and letters
         radius = 96 * altUnit;

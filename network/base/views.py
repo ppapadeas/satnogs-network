@@ -595,11 +595,11 @@ def station_view(request, id):
                                         'name': str(satellite.name),
                                         'id': str(satellite.id),
                                         'norad_cat_id': str(satellite.norad_cat_id),
-                                        'tr': str(tr),      # Rise time
+                                        'tr': tr.datetime(),      # Rise time
                                         'azr': azimuth_r,     # Rise Azimuth
                                         'tt': tt,           # Max altitude time
                                         'altt': elevation,  # Max altitude
-                                        'ts': str(ts),      # Set time
+                                        'ts': ts.datetime(),      # Set time
                                         'azs': azimuth_s,   # Set azimuth
                                         'valid': valid,
                                         'polar_data': polar_data}
