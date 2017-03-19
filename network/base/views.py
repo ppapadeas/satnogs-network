@@ -316,7 +316,8 @@ def observation_new(request):
                    'date_max_range': settings.DATE_MAX_RANGE})
 
 
-def prediction_windows(request, sat_id, start_date, end_date, station_id=None):
+def prediction_windows(request, sat_id, transmitter, start_date, end_date,
+                       station_id=None):
     try:
         sat = Satellite.objects.filter(transmitters__alive=True). \
             distinct().get(norad_cat_id=sat_id)
@@ -338,6 +339,14 @@ def prediction_windows(request, sat_id, start_date, end_date, station_id=None):
         }
         return JsonResponse(data, safe=False)
 
+    try:
+        downlink = Transmitter.objects.get(id=int(transmitter)).downlink_low
+    except:
+        data = {
+            'error': 'You should select a Transmitter first.'
+        }
+        return JsonResponse(data, safe=False)
+
     end_date = datetime.strptime(end_date, '%Y-%m-%d %H:%M')
 
     data = []
@@ -348,6 +357,20 @@ def prediction_windows(request, sat_id, start_date, end_date, station_id=None):
     for station in stations:
         if not station.online:
             continue
+
+        # skip if this station is not capable of receiving the frequency
+        frequency_supported = False
+        for gs_antenna in station.antenna.all():
+            try:
+                if (int(gs_antenna.frequency) <=
+                        int(downlink) <=
+                        int(gs_antenna.frequency_max)):
+                    frequency_supported = True
+            except TypeError:
+                continue
+        if not frequency_supported:
+            continue
+
         observer = ephem.Observer()
         observer.lon = str(station.lng)
         observer.lat = str(station.lat)
@@ -535,6 +558,7 @@ def station_view(request, id):
     form = StationForm(instance=station)
     antennas = Antenna.objects.all()
     rigs = Rig.objects.all()
+    unsupported_frequencies = request.GET.get('unsupported_frequencies', '0')
 
     try:
         satellites = Satellite.objects.filter(transmitters__alive=True).distinct()
@@ -552,6 +576,23 @@ def station_view(request, id):
     passid = 0
 
     for satellite in satellites:
+        # look for a match between transmitters from the satellite and
+        # ground station antenna frequency capabilities
+        if int(unsupported_frequencies) == 0:
+            frequency_supported = False
+            downlinks = Transmitter.objects.filter(satellite=satellite)
+            for gs_antenna in station.antenna.all():
+                for downlink in downlinks:
+                    try:
+                        if (int(gs_antenna.frequency) <=
+                                int(downlink.downlink_low) <=
+                                int(gs_antenna.frequency_max)):
+                            frequency_supported = True
+                    except TypeError:
+                        continue
+            if not frequency_supported:
+                continue
+
         observer.date = ephem.date(datetime.today())
 
         try:
@@ -595,11 +636,11 @@ def station_view(request, id):
                                         'name': str(satellite.name),
                                         'id': str(satellite.id),
                                         'norad_cat_id': str(satellite.norad_cat_id),
-                                        'tr': str(tr),      # Rise time
+                                        'tr': tr.datetime(),      # Rise time
                                         'azr': azimuth_r,     # Rise Azimuth
                                         'tt': tt,           # Max altitude time
                                         'altt': elevation,  # Max altitude
-                                        'ts': str(ts),      # Set time
+                                        'ts': ts.datetime(),      # Set time
                                         'azs': azimuth_s,   # Set azimuth
                                         'valid': valid,
                                         'polar_data': polar_data}
@@ -623,7 +664,8 @@ def station_view(request, id):
                    'mapbox_id': settings.MAPBOX_MAP_ID,
                    'mapbox_token': settings.MAPBOX_TOKEN,
                    'nextpasses': sorted(nextpasses, key=itemgetter('tr')),
-                   'rigs': rigs})
+                   'rigs': rigs,
+                   'unsupported_frequencies': unsupported_frequencies})
 
 
 @require_POST

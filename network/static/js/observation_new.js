@@ -51,11 +51,12 @@ $(document).ready( function(){
         $('#windows-data').empty();
         var start_time = $('#datetimepicker-start input').val();
         var end_time = $('#datetimepicker-end input').val();
+        var transmitter = $('#transmitter-selection').find(':selected').val();
 
-        var url = '/prediction_windows/' + satellite + '/' + start_time + '/' + end_time + '/';
+        var url = '/prediction_windows/' + satellite + '/' + transmitter + '/' + start_time + '/' + end_time + '/';
 
         if (obs_filter_station) {
-            url = '/prediction_windows/' + satellite + '/' + start_time + '/' + end_time + '/' + ground_station + '/';
+            url = '/prediction_windows/' + satellite + '/' + transmitter + '/' + start_time + '/' + end_time + '/' + ground_station + '/';
         }
 
         $.ajax({

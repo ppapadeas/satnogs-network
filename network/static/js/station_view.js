@@ -29,7 +29,7 @@ $(document).ready(function() {
         var centerY = ctx.canvas.height / 2;
         var canvasSize = Math.min(ctx.canvas.width, ctx.canvas.height);
         var altUnit = canvasSize/(2.5 * 90);
-        var fontRatio = 0.06;
+        var fontRatio = 0.07;
         var radius;
         var radians;
 
@@ -46,8 +46,8 @@ $(document).ready(function() {
             }
         }
 
-        ctx.strokeStyle = '#000000';
-        ctx.lineWidth = 2;
+        ctx.strokeStyle = '#444444';
+        ctx.lineWidth = 1;
         ctx.stroke();
         //Draw axis and letters
         radius = 96 * altUnit;
@@ -128,4 +128,26 @@ $(document).ready(function() {
             'marker-color': '#666',
         }
     }).addTo(map);
+
+    // Filters
+    $('#antenna-filter').submit(function () {
+        var the_form = $(this);
+
+        the_form.find('input[type="checkbox"]').each( function () {
+            var the_checkbox = $(this);
+
+
+            if( the_checkbox.is(':checked') === true ) {
+                the_checkbox.attr('value','1');
+            } else {
+                the_checkbox.prop('checked',true);
+                // Check the checkbox but change it's value to 0
+                the_checkbox.attr('value','0');
+            }
+        });
+    });
+
+    $('.filter-section input[type=checkbox]').change(function() {
+        $('#antenna-filter').submit();
+    });
 });

@@ -163,10 +163,24 @@
   </div>
 
   <div class="collapse" id="collapseExample">
+    <div class="collapse in" id="collapseFilters">
+      <div class="filter-section">
+        <form id="antenna-filter" class="form-inline" method="get" action="{% url 'base:station_view' id=station.id %}">
+          <div class="form-group">
+            <h4>Filter:</h4>
+            <div class="btn-group" data-toggle="buttons">
+              <label class="btn btn-default btn-sm {% if unsupported_frequencies == '1' %}active{% endif %}"  aria-expanded="true" aria-controls="unsupported_frequencies">
+                <input type="checkbox" name="unsupported_frequencies" {% if unsupported_frequencies == '1' %}checked{% endif %} autocomplete="off">Include unsupported satellites
+              </label>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
   <table class="table table-hover table-responsive">
       <thead>
         <th>Name</th>
-        <th>Rise Time</th>
+        <th>Timeframe</th>
         <th>Rise, Max, Set</th>
         <th>Polar</th>
         <th></th>
@@ -180,7 +194,10 @@
               </a>
             </td>
             <td>
-              {{ nextpass.tr }} UTC
+              <span class="datetime-date">{{ nextpass.tr|date:"Y-m-d" }}</span>
+              <span class="datetime-time">{{ nextpass.tr|date:"H:i:s" }}</span><br>
+              <span class="datetime-date">{{ nextpass.ts|date:"Y-m-d" }}</span>
+              <span class="datetime-time">{{ nextpass.ts|date:"H:i:s" }}</span>
             </td>
             <td>
               {{ nextpass.azr }}° > {{ nextpass.altt }}° > {{ nextpass.azs }}°
@@ -190,7 +207,7 @@
             </td>
             <td>
               {% if nextpass.valid %}
-                <a href="{% url 'base:observation_new' %}?norad={{ nextpass.norad_cat_id }}&ground_station={{ station.id }}&start_date={{ nextpass.tr|truncatesecs }}&end_date={{ nextpass.ts|truncatesecs }}"
+                <a href="{% url 'base:observation_new' %}?norad={{ nextpass.norad_cat_id }}&ground_station={{ station.id }}&start_date={{ nextpass.tr|date:"Y/m/d H:i" }}&end_date={{ nextpass.ts|date:"Y/m/d H:i" }}"
                    class="btn btn-default">schedule</a>
               {% else %}
                 <a href="#" class="btn btn-default" disabled>schedule</a>

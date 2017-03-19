@@ -15,10 +15,11 @@ base_urlpatterns = ([
     url(r'^observations/(?P<id>[0-9]+)/delete/$', views.observation_delete,
         name='observation_delete'),
     url(r'^observations/new/$', views.observation_new, name='observation_new'),
-    url(r'^prediction_windows/(?P<sat_id>[\w.@+-]+)/(?P<start_date>.+)/'
-        '(?P<end_date>.+)/(?P<station_id>[\w.@+-]+)/$',
+    url(r'^prediction_windows/(?P<sat_id>[\w.@+-]+)/(?P<transmitter>[\w.@+-]+)/'
+        '(?P<start_date>.+)/(?P<end_date>.+)/(?P<station_id>[\w.@+-]+)/$',
         views.prediction_windows, name='prediction_windows_filtered'),
-    url(r'^prediction_windows/(?P<sat_id>[\w.@+-]+)/(?P<start_date>.+)/(?P<end_date>.+)/$',
+    url(r'^prediction_windows/(?P<sat_id>[\w.@+-]+)/(?P<transmitter>[\w.@+-]+)/'
+        '(?P<start_date>.+)/(?P<end_date>.+)/$',
         views.prediction_windows, name='prediction_windows'),
     url(r'^data_verify/(?P<id>[0-9]+)/$', views.data_verify, name='data_verify'),
     url(r'^data_mark_bad/(?P<id>[0-9]+)/$', views.data_mark_bad, name='data_mark_bad'),
