@@ -167,9 +167,8 @@
       <thead>
         <th>Name</th>
         <th>Rise Time</th>
-        <th>Max Altitude</th>
-        <th>Rising Azimuth</th>
-        <th>Data</th>
+        <th>Rise, Max, Set</th>
+        <th>Polar</th>
         <th></th>
       </thead>
       <tbody>
@@ -184,10 +183,7 @@
               {{ nextpass.tr }} UTC
             </td>
             <td>
-              {{ nextpass.altt }}°
-            </td>
-            <td>
-              {{ nextpass.azr }}°
+              {{ nextpass.azr }}° > {{ nextpass.altt }}° > {{ nextpass.azs }}°
             </td>
             <td>
               <canvas width="100" height="100" data-points="{{ nextpass.polar_data }}"></canvas>
