@@ -237,6 +237,14 @@ span.datetime-time {
     margin-left: 10px;
 }
 
+.red {
+    color: red;
+}
+
+.lightgreen {
+    color: lightgreen;
+}
+
 /* Stations
 ==================== */
 

@@ -181,7 +181,9 @@
       <thead>
         <th>Name</th>
         <th>Timeframe</th>
-        <th>Rise, Max, Set</th>
+        <th>⤉Rise°</th>
+        <th>⇴Max°</th>
+        <th>⤈Set°</th>
         <th>Polar</th>
         <th></th>
       </thead>
@@ -200,7 +202,13 @@
               <span class="datetime-time">{{ nextpass.ts|date:"H:i:s" }}</span>
             </td>
             <td>
-              {{ nextpass.azr }}° > {{ nextpass.altt }}° > {{ nextpass.azs }}°
+              <span class="lightgreen">⤉</span>{{ nextpass.azr }}°
+            </td>
+            <td>
+              ⇴{{ nextpass.altt }}°
+            </td>
+            <td>
+              <span class="red">⤈</span>{{ nextpass.azs }}°
             </td>
             <td>
               <canvas width="100" height="100" data-points="{{ nextpass.polar_data }}"></canvas>

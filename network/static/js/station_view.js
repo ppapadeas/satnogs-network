@@ -82,8 +82,6 @@ $(document).ready(function() {
         radians = (Math.PI/180) * (data[0][1] - 90);
         radius = (90 - data[0][0]) * altUnit;
         ctx.moveTo(centerΧ + radius * Math.cos(radians),centerY + radius * Math.sin(radians));
-        ctx.lineTo(centerΧ + radius * Math.cos(radians),centerY + radius * Math.sin(radians));
-
 
         var dataLength = data.length;
         for (var j=1; j< dataLength; j++) {
@@ -91,10 +89,22 @@ $(document).ready(function() {
             radius = (90 - data[j][0] ) * altUnit;
             ctx.lineTo(centerΧ + radius * Math.cos(radians),centerY + radius * Math.sin(radians));
         }
-
-        ctx.strokeStyle = '#0000FF';
+        ctx.strokeStyle = 'rgb(0, 0, 255)';
         ctx.lineWidth = 2;
         ctx.stroke();
+
+        //Draw start and end
+        radians = (Math.PI/180) * (data[0][1] - 90);
+        ctx.beginPath();
+        ctx.arc(centerΧ + radius * Math.cos(radians),centerY + radius * Math.sin(radians), 3, 0, 2 * Math.PI, false);
+        ctx.fillStyle = 'lightgreen';
+        ctx.fill();
+
+        radians = (Math.PI/180) * (data[dataLength-1][1] - 90);
+        ctx.beginPath();
+        ctx.arc(centerΧ + radius * Math.cos(radians),centerY + radius * Math.sin(radians), 3, 0, 2 * Math.PI, false);
+        ctx.fillStyle = 'red';
+        ctx.fill();
     }
 
     $('canvas').each(function(){
