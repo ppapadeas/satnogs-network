@@ -58,23 +58,23 @@
           <th>Encoding</th>
           <th>Timeframe</th>
           <th>Observer</th>
+          <th>Station</th>
         </thead>
         <tbody>
           {% for observation in observations %}
             <tr data-norad="{{ observation.satellite.norad_cat_id }}">
               <td>
                 <a href="{% url 'base:observation_view' id=observation.id %}">
-                  <span class="label
-                               {% if observation.has_verified_data %}
-                                label-success" title="There is known good data in this observation"
-                               {% elif observation.is_future %}
-                                label-info" title="This observation is in the future"
-                               {% elif observation.has_unvetted_data %}
-                                label-warning" title="There is data that needs vetting in this observation"
-                               {% else %}
-                                label-danger" title="No good data in this observation"
-                               {% endif %}>
-                    {{ observation.id }}
+                  {% if observation.has_verified_data %}
+                    <span class="label label-success" title="There is known good data in this observation"
+                  {% elif observation.is_future %}
+                    <span class="label label-info" title="This observation is in the future"
+                  {% elif observation.has_unvetted_data %}
+                    <span class="label label-warning" title="There is data that needs vetting in this observation"
+                  {% else %}
+                    <span class="label label-danger" title="No good data in this observation"
+                  {% endif %}>
+                  {{ observation.id }}
                   </span>
                 </a>
               </td>
@@ -95,6 +95,13 @@
                 <a href="{% url 'users:view_user' username=observation.author.username %}">
                   {{ observation.author.displayname }}
                 </a>
+              </td>
+              <td>
+                {% for data in observation.data_set.all %}
+                  <a href="{% url 'base:station_view' id=data.ground_station.id %}">
+                    <span class="label label-primary" title="{{ data.ground_station.name }}">{{ data.ground_station.id }}</span>
+                  </a>
+                {% endfor %}
               </td>
             </tr>
           {% endfor %}
