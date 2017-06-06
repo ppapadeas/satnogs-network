@@ -420,7 +420,7 @@ span.datetime-time {
 ==================== */
 
 .satellite-info {
-    margin-bottom: 40px;
+    margin-bottom: 20px;
 }
 
 #SatelliteModal li {
@@ -455,4 +455,9 @@ span.datetime-time {
 .tab-content > .active {
     visibility: visible;
     position: initial;
+}
+
+.satellite-success {
+    width: 100px;
+    margin-top: 20px;
 }

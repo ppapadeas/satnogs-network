@@ -616,6 +616,13 @@ def station_view(request, id):
                                 'debug': observer.next_pass(sat_ephem),
                                 'name': str(satellite.name),
                                 'id': str(satellite.id),
+                                'success_rate': str(satellite.success_rate),
+                                'unknown_rate': str(satellite.unknown_rate),
+                                'empty_rate': str(satellite.empty_rate),
+                                'data_count': str(satellite.data_count),
+                                'verified_count': str(satellite.verified_count),
+                                'empty_count': str(satellite.empty_count),
+                                'unknown_count': str(satellite.unknown_count),
                                 'norad_cat_id': str(satellite.norad_cat_id),
                                 'tr': tr.datetime(),  # Rise time
                                 'azr': azimuth_r,     # Rise Azimuth
@@ -689,6 +696,11 @@ def satellite_view(request, id):
         'name': sat.name,
         'names': sat.names,
         'image': sat.image,
+        'success_rate': sat.success_rate,
+        'verified_count': sat.verified_count,
+        'empty_count': sat.empty_count,
+        'unknown_count': sat.unknown_count,
+        'data_count': sat.data_count,
     }
 
     return JsonResponse(data, safe=False)

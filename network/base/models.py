@@ -170,6 +170,55 @@ class Satellite(models.Model):
         except:
             return False
 
+    @property
+    def success_rate(self):
+        try:
+            data = Data.objects.filter(observation__satellite=self)
+            data_verified = float(data.filter(vetted_status='verified').count())
+            data_all = float(data.count())
+            return int(100 * (data_verified / data_all))
+        except:
+            return 0
+
+    @property
+    def data_count(self):
+        return Data.objects.filter(observation__satellite=self).count()
+
+    @property
+    def verified_count(self):
+        data = Data.objects.filter(observation__satellite=self)
+        return data.filter(vetted_status='verified').count()
+
+    @property
+    def empty_count(self):
+        data = Data.objects.filter(observation__satellite=self)
+        return data.filter(vetted_status='no_data').count()
+
+    @property
+    def unknown_count(self):
+        data = Data.objects.filter(observation__satellite=self)
+        return data.filter(vetted_status='unknown').count()
+
+    @property
+    def empty_rate(self):
+        try:
+            data = Data.objects.filter(observation__satellite=self)
+            data_empty = float(data.filter(vetted_status='no_data').count())
+            data_all = float(data.count())
+            return int(100 * (data_empty / data_all))
+        except:
+            return 0
+
+    @property
+    def unknown_rate(self):
+        try:
+            data = Data.objects.filter(observation__satellite=self)
+            data_unknown = float(data.filter(vetted_status='unknown').count())
+            data_all = float(data.count())
+            return int(100 * (data_unknown / data_all))
+        except:
+            return 0
+
     def __unicode__(self):
         return self.name
 

@@ -4,10 +4,10 @@ $(document).ready(function() {
     'use strict';
 
     // Render Station success rate
-    var success_rate = $('.progress-bar-success').data('success-rate');
-    var percentagerest = $('.progress-bar-danger').data('percentagerest');
-    $('.progress-bar-success').css('width', success_rate + '%');
-    $('.progress-bar-danger').css('width', percentagerest + '%');
+    var success_rate = $('.gs.progress-bar-success').data('success-rate');
+    var percentagerest = $('.gs.progress-bar-danger').data('percentagerest');
+    $('.gs.progress-bar-success').css('width', success_rate + '%');
+    $('.gs.progress-bar-danger').css('width', percentagerest + '%');
 
     // Reading data for station
     var station_info = $('#station-info').data();

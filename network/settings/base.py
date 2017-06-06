@@ -203,6 +203,7 @@ REST_FRAMEWORK = {
 SECRET_KEY = getenv('SECRET_KEY', 'changeme')
 CSP_DEFAULT_SRC = (
     "'self'",
+    "'unsafe-inline'",
     'https://*.mapbox.com',
 )
 CSP_SCRIPT_SRC = (
